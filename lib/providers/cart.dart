@@ -4,12 +4,14 @@ import 'package:my_shop_provider/providers/product.dart';
 
 class CartItem {
   final String? id;
+  final String? productId;
   final String? title;
   final int? quantity;
   final double? price;
 
   CartItem({
     required this.id,
+    required this.productId,
     required this.title,
     required this.quantity,
     required this.price,
@@ -27,11 +29,20 @@ class Cart with ChangeNotifier {
     return _items.length;
   }
 
+  double get totalAmount {
+    double total = 0;
+    _items.forEach((key, cartTotal) {
+      total += cartTotal.price! * cartTotal.quantity!;
+    });
+    return total;
+  }
+
   void addItem(Product product) {
     if (_items.containsKey(product.id)) {
       _items.update(product.id!, (existItem) {
         return CartItem(
             id: existItem.id,
+            productId: product.id,
             title: existItem.title,
             quantity: existItem.quantity! + 1,
             price: existItem.price);
@@ -41,10 +52,16 @@ class Cart with ChangeNotifier {
           product.id!,
           () => CartItem(
               id: Random().nextDouble().toString(),
+              productId: product.id,
               title: product.title,
               quantity: 1,
               price: product.price));
     }
+    notifyListeners();
+  }
+
+  void removeItem(String productId) {
+    _items.remove(productId);
     notifyListeners();
   }
 }
