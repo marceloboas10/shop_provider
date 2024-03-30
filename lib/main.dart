@@ -3,6 +3,8 @@ import 'package:my_shop_provider/providers/cart.dart';
 import 'package:my_shop_provider/providers/product_provider.dart';
 import 'package:my_shop_provider/utils/app_routes.dart';
 import 'package:my_shop_provider/views/cart_screen.dart';
+import 'package:my_shop_provider/providers/orders.dart';
+import 'package:my_shop_provider/views/orders_screen.dart';
 import 'package:my_shop_provider/views/product_detail_screen.dart';
 import 'package:my_shop_provider/views/product_overview_screen.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => Cart(),
         ),
+        ChangeNotifierProvider(create: (_) => Orders())
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -36,8 +39,10 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Lato'),
         home: const ProductOverviewScreen(),
         routes: {
+          AppRoutes.home: (context) => const ProductOverviewScreen(),
           AppRoutes.productDetail: (context) => const ProductDetailScreen(),
-          AppRoutes.cartScreen:(context) => const CartScreen(),
+          AppRoutes.cartScreen: (context) => const CartScreen(),
+          AppRoutes.ordersScreen: (context) => const OrdersScreen(),
         },
       ),
     );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_shop_provider/providers/cart.dart';
+import 'package:my_shop_provider/providers/orders.dart';
+import 'package:my_shop_provider/utils/app_routes.dart';
 import 'package:my_shop_provider/widgets/cart_product.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +56,11 @@ class CartScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 30, left: 25, right: 25),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Provider.of<Orders>(context, listen: false).addOrder(cart);
+                cart.clear();
+                Navigator.of(context).pushNamed(AppRoutes.ordersScreen);
+              },
               style: ButtonStyle(
                 fixedSize: MaterialStatePropertyAll(
                   Size(MediaQuery.sizeOf(context).width, 50),
