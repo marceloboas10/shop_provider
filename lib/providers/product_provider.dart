@@ -9,6 +9,10 @@ class ProductProvider with ChangeNotifier {
     return [..._items];
   }
 
+  int get itensCount {
+    return _items.length;
+  }
+
   List<Product> get favoriteItems {
     return items.where((prod) => prod.isFavorite).toList();
   }
@@ -18,5 +22,3 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 }
-
-

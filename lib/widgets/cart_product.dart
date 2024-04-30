@@ -21,6 +21,27 @@ class CartProduct extends StatelessWidget {
             .removeItem(cartItem.productId.toString());
       },
       direction: DismissDirection.endToStart,
+      confirmDismiss: (_) => showDialog(
+        context: context,
+        builder: (ctx) {
+          return AlertDialog(
+            title: const Text("Tem certeza que deseja excluir?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop(false);
+                },
+                child: const Text('Não'),
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop(true);
+                  },
+                  child: const Text('Sim'),)
+            ],
+          );
+        },
+      ),
       background: Container(
         margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
         color: Theme.of(context).colorScheme.error,
