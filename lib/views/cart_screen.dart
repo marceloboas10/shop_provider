@@ -62,7 +62,7 @@ class CartScreen extends StatelessWidget {
                 Navigator.of(context).pushNamed(AppRoutes.ordersScreen);
               },
               style: ButtonStyle(
-                fixedSize: MaterialStatePropertyAll(
+                fixedSize: WidgetStatePropertyAll(
                   Size(MediaQuery.sizeOf(context).width, 50),
                 ),
               ),

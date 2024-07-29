@@ -57,7 +57,15 @@ class ProductGridItem extends StatelessWidget {
               ),
             ),
           ),
-          child: Image.network(product.imageUrl!, fit: BoxFit.cover),
+          child: product.imageUrl == ''
+              ? Image.asset(
+                  'assets/image/semFoto.png',
+                  fit: BoxFit.cover,
+                )
+              : Image.network(
+                  product.imageUrl.toString(),
+                  fit: BoxFit.cover,
+                ),
         ),
       ),
     );
