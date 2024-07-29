@@ -80,33 +80,30 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       isLoading = true;
     });
 
-    if (_formData['id'] == null) {
-      try {
+    try {
+      if (_formData['id'] == null) {
         await productProvider.addProduct(newProduct);
-        Navigator.of(context).pop();
-      } catch (e) {
-        await showDialog<Null>(
-            context: context,
-            builder: (ctx) => AlertDialog(
-                  title: const Text('Erro ao Salvar'),
-                  content: const Text('Ocorreu um erro ao salvar o produto!'),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('OK'))
-                  ],
-                ));
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
+      } else {
+        await productProvider.updateProduct(newProduct);
       }
-    } else {
-      productProvider.updateProduct(newProduct);
-      Navigator.of(context).pop();
 
+      Navigator.of(context).pop();
+    } catch (e) {
+      await showDialog<Null>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Erro ao Salvar'),
+          content: const Text('Ocorreu um erro ao salvar o produto!'),
+          actions: [
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'))
+          ],
+        ),
+      );
+    } finally {
       setState(() {
         isLoading = false;
       });

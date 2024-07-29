@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:my_shop_provider/providers/product.dart';
 import 'package:my_shop_provider/providers/product_provider.dart';
@@ -11,6 +13,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scafold = ScaffoldMessenger.of(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListTile(
@@ -59,14 +62,22 @@ class ProductItem extends StatelessWidget {
                           ElevatedButton(
                               onPressed: () {
                                 Navigator.of(context).pop(true);
-                                Provider.of<ProductProvider>(context,
-                                        listen: false)
-                                    .deleteProduct(product);
                               },
                               child: const Text('SIM'))
                         ],
                       ),
-                    );
+                    ).then(((value) async {
+                      if (value) {
+                        try {
+                          await Provider.of<ProductProvider>(context,
+                                  listen: false)
+                              .deleteProduct(product.id.toString());
+                        } catch (e) {
+                          scafold.showSnackBar(
+                              SnackBar(content: Text(e.toString())));
+                        }
+                      }
+                    }));
                   },
                   icon: Icon(
                     Icons.delete,

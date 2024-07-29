@@ -34,10 +34,11 @@ class CartProduct extends StatelessWidget {
                 child: const Text('Não'),
               ),
               TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop(true);
-                  },
-                  child: const Text('Sim'),)
+                onPressed: () {
+                  Navigator.of(ctx).pop(true);
+                },
+                child: const Text('Sim'),
+              )
             ],
           );
         },
@@ -61,8 +62,9 @@ class CartProduct extends StatelessWidget {
             leading: CircleAvatar(
                 child: ListView.builder(
               itemCount: product.length,
-              itemBuilder: (context, i) =>
-                  Image.network(product[count].imageUrl.toString()),
+              itemBuilder: (context, i) => product[count].imageUrl == ''
+                  ? Image.asset('assets/image/semFoto.png')
+                  : Image.network(product[count].imageUrl.toString()),
             )),
             title: Text(cartItem.title.toString()),
             subtitle:

@@ -1,12 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_shop_provider/providers/product.dart';
 
 class ProductProvider with ChangeNotifier {
   final List<Product> _items = [];
-  final String _url =
-      'https://cod3rbr-default-rtdb.firebaseio.com/produtcts.json';
+  final String _baseUrl =
+      'https://cod3rbr-default-rtdb.firebaseio.com/produtcts';
 
   List<Product> get items {
     return [..._items];
@@ -21,7 +22,7 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> loadProducts() async {
-    final response = await http.get(Uri.parse(_url));
+    final response = await http.get(Uri.parse('$_baseUrl.json'));
     _items.clear();
     try {
       Map<String, dynamic> data = json.decode(response.body);
@@ -45,7 +46,7 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(Product newProduct) async {
-    final response = await http.post(Uri.parse(_url),
+    final response = await http.post(Uri.parse('$_baseUrl.json'),
         body: json.encode({
           'title': newProduct.title,
           'description': newProduct.description,
@@ -63,7 +64,7 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProduct(Product product) {
+  Future<void> updateProduct(Product product) async {
     if (product.id == null) {
       return;
     }
@@ -71,17 +72,34 @@ class ProductProvider with ChangeNotifier {
     final index = _items.indexWhere((prod) => prod.id == product.id);
 
     if (index >= 0) {
+      await http.patch(Uri.parse('$_baseUrl/${product.id}.json'),
+          body: json.encode({
+            'title': product.title,
+            'description': product.description,
+            'price': product.price,
+            'imageUrl': product.imageUrl,
+          }));
       _items[index] = product;
       notifyListeners();
     }
   }
 
-  void deleteProduct(Product product) {
-    if (product.id == null) {
-      return;
-    }
+  Future<void> deleteProduct(String id) async {
+    final index = _items.indexWhere((prod) => prod.id == id);
 
-    _items.remove(product);
-    notifyListeners();
+    if (index >= 0) {
+      final product = _items[index];
+      _items.remove(product);
+      notifyListeners();
+
+      final response =
+          await http.delete(Uri.parse('$_baseUrl/${product.id}.json'));
+
+      if (response.statusCode >= 400) {
+        _items.insert(index, product);
+        notifyListeners();
+        throw const HttpException('Ocorre um erro ao excluir o produto!');
+      }
+    }
   }
 }

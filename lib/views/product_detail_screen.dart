@@ -20,16 +20,18 @@ class ProductDetailScreen extends StatelessWidget {
             SizedBox(
               height: 400,
               width: double.infinity,
-              child: Image.network(
-                product.imageUrl.toString(),
-                fit: BoxFit.cover,
-              ),
+              child: product.imageUrl == ''
+                  ? Image.asset('assets/image/semFoto.png')
+                  : Image.network(
+                      product.imageUrl.toString(),
+                      fit: BoxFit.cover,
+                    ),
             ),
             const SizedBox(
               height: 10,
             ),
             Text(
-              product.price.toString(),
+              'R\$ ${product.price!.toStringAsFixed(2)}',
               style: const TextStyle(
                 color: Colors.grey,
               ),
